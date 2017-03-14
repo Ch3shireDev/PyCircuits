@@ -1,3 +1,6 @@
+#File for class structure of Circuit (whole system), Nodes (intersections in circuit) and Lines (or wires). For now Lines have only resistance
+#parameter, so it's just complicated simulation of simple mid-school resistors system.
+
 class Line:
     def __init__(self, NodeIn, NodeOut, R = 1.):
         self.NodeIn = NodeIn
@@ -26,13 +29,19 @@ class Line:
         return self.I
 
 
-class Node:    
-    def __init__(self, V=0.):
-        self.V = V
+class Node:
+    def __init__(self):
+        self.V = 0.
         self.Lines = []
+        self.IsConstant = False
+
+    def SetConstant(self, flag = True):
+        self.IsConstant = flag
     def AddWire(self, line):
         self.Lines.append(line)
     def Recalculate(self):
+        if self.IsConstant:
+            return
         if len(self.Lines) < 2:
             return
         self.V = 0.
@@ -85,9 +94,20 @@ class Circuit:
         self.Nodes = []
         self.Lines = []
 
-    def AddNode(self, V=0.):
-        node = Node(V)
+    def AddNode(self):
+        node = Node()
         self.Nodes.append(node)
+        return node
+
+    def AddSource(self, V):
+        node = self.AddNode()
+        node.V = V
+        node.SetConstant()
+        return node
+
+    def AddGround(self):
+        node = self.AddNode()
+        node.SetConstant()
         return node
 
     def AddWire(self, NodeIn, NodeOut, R=1.):
