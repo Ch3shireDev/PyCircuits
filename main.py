@@ -10,7 +10,6 @@ import matplotlib.pyplot as plt
 dt = 0.001
 N = 10000
 V0 = 100.
-V3 = 0.
 
 System = Circuit()
 

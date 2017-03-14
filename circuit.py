@@ -67,12 +67,9 @@ class Node:
     def Recalculate(self):
         if self.IsConstant:
             return
-        if len(self.Lines) < 2:
-            return
         self.V = 0.
         for Wire in self.Lines:
             self.V += Wire.GetPotentialChange(self)
-
         self.V /= len(self.Lines)
 
     def TimeStep(self, dt = 0.001):
@@ -80,38 +77,28 @@ class Node:
             return
         if len(self.Lines) == 1:
             Wire = self.Lines[0]
-            if Wire.NodeIn is self:
-                Wire.TimeStep(dt)
-                return
-
-        InCurrent = 0.
-        OutWires = []
-
-        for Wire in self.Lines:
-            if Wire.NodeOut is self:
-                InCurrent += Wire.I
-            else:
-                OutWires.append(Wire)
-
-        if len(OutWires) == 0:
-            return
-
-        if len(OutWires) == len(self.Lines):
-            exit(0)
-
-        if len(OutWires) == 1:
-            OutWires[0].I = InCurrent
+            Wire.TimeStep(dt)
             self.Recalculate()
             return
 
-        OutCurrent = 0.
-        for Wire in OutWires[:-1]:
+        LastWire = None
+        for Wire in self.Lines:
+            if Wire.IsChecked is False:
+                LastWire = Wire
+                break
+
+        if LastWire is None:
+            self.Recalculate()
+            return
+
+        Current = 0.
+        for Wire in self.Lines:
+            if Wire is LastWire:
+                continue
             Wire.TimeStep(dt)
-            OutCurrent += Wire.I
-
-        OutWires[-1].I = InCurrent - OutCurrent
+            Current += Wire.GetCurrent(self)
+        LastWire.SetCurrent(self, -Current)
         self.Recalculate()
-
 
 
 class Circuit:

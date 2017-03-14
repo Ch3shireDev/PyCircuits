@@ -8,4 +8,4 @@ Calculating method:
 
 We assume some inertia of current (change of I described by di), so one should also take some inductance value L. Calculating method does not require capacity value C.
 
-TODO: For now I use directed graph. Either I can change the code to use undirected graph, or add handling the case of node with all-in lines.
+TODO: Add more general description of wires, not by R, C etc. but by given arbitrary function.
