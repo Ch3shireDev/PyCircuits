@@ -1,12 +1,48 @@
 #!/usr/bin/python
-import numpy as np
-import matplotlib.pyplot as plt
 
+from circuit import *
+import matplotlib.pyplot as plt
 
 dt = 0.001
 N = 10000
-
 V0 = 100.
+V3 = 0.
+
+System = Circuit()
+
+a = System.AddNode(V0)
+b = System.AddNode()
+c = System.AddNode()
+d = System.AddNode(V3)
+
+ab = System.AddWire(a, b)
+bc1 = System.AddWire(b, c)
+bc2 = System.AddWire(b, c)
+cd = System.AddWire(c, d)
+
+Tab0 = []
+Tab1 = []
+Tab2 = []
+Tab3 = []
+
+for i in range(N):
+    System.TimeStep()
+    Tab0.append(ab.I)
+    Tab1.append(bc1.I)
+    Tab2.append(bc2.I)
+    Tab3.append(cd.I)
+
+Time = [i*dt for i in range(N)]
+
+plt.plot(Time, Tab0, label="ab")
+plt.plot(Time, Tab1, label="bc1")
+plt.plot(Time, Tab2, label="bc2")
+plt.plot(Time, Tab3, label="cd")
+
+plt.legend(loc='upper right', shadow=True)
+plt.show()
+
+# exit(0)
 
 r0 = 1.
 r1 = 1.
@@ -23,26 +59,20 @@ V2 = 0.
 
 V3 = 0.
 
-Tab0 = np.array([])
-Tab1 = np.array([])
-Tab2 = np.array([])
+Tab0 = []
+Tab1 = []
+Tab2 = []
 
 for i in range(N):
     
     I0 += (V0 - V1 - r0*I0)*dt
-
     #branches
-
     #branch 1
-
     I1 = I0 - I2
-
     #branch 2
-
     I2 += (V1 - V2 - r2*I2)*dt
 
     #branch 1
-
     I3 = I1 + I2
 
     V1 = (V0 - r0*I0) + (V2 + r1*I1) + (V2 + r2*I2)
@@ -51,9 +81,9 @@ for i in range(N):
     V2 = (V1 - I1*r1) + (V1 - I2*r2) + (V3 + I3*r3)
     V2 /= 3
 
-    Tab0 = np.append(Tab0, I0)
-    Tab1 = np.append(Tab1, I1)
-    Tab2 = np.append(Tab2, I3)
+    Tab0.append(I0)
+    Tab1.append(I1)
+    Tab2.append(I3)
 
 #             |---[  ]---|
 # V0 o--[  ]--o          o---[  ]---o Ground
@@ -61,7 +91,7 @@ for i in range(N):
 #
 # All resistors ( [  ] ) have resistance 1 Ohm, V0 is 100 V
 
-Time = np.arange(N)*dt
+Time = [i*dt for i in range(N)]
 plt.ticklabel_format(useOffset=False, style='plain')
 plt.plot(Time, Tab0, label="1")
 plt.plot(Time, Tab1, label="2")

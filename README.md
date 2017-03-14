@@ -8,6 +8,4 @@ Calculating method:
 
 We assume some inertia of current (change of I described by di), so one should also take some inductance value L. Calculating method does not require capacity value C.
 
-TODO:
-
-Wire class - any part of the circuit (with given resistance and other parameters, not necessary linear) is described as a simple object. Example is commented, it didn't work exactly well.
+TODO: For now I use directed graph. Either I can change the code to use undirected graph, or add handling the case of node with all-in lines.
