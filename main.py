@@ -6,13 +6,14 @@
 from circuit import Circuit
 from simple_example import example
 import matplotlib.pyplot as plt
+from math import sin
 
 dt = 0.001
 N = 10000
 V0 = 100.
 
 System = Circuit()
-
+# a = System.AddAlternatingSource(lambda t: V0*sin(t))
 a = System.AddSource(V0)
 b = System.AddNode()
 c = System.AddNode()
@@ -29,7 +30,7 @@ Tab2 = []
 Tab3 = []
 
 for i in range(N):
-    System.TimeStep()
+    System.TimeStep(dt)
     Tab0.append(ab.I)
     Tab1.append(bc1.I)
     Tab2.append(bc2.I)
