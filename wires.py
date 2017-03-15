@@ -32,7 +32,7 @@ class Line(object):
         '''Function for potential change from one node to another.
         Does not require redefining in child classes.'''
         if Node is not self.NodeIn and Node is not self.NodeOut:
-            print "wrong nodes!"
+            print("wrong nodes!")
             exit(0)
         if Node is self.NodeIn:
             return self.NodeOut.GetV() + self.DeltaV()
