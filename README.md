@@ -12,4 +12,4 @@ Circuit is described by graph - nodes have associated potentials and lines (wire
 
 We assume some inertia of current (change of I described by di), so one should also take some basic inductance value L. For now taken value is equal to 1, probably should be much smaller.
 
-TODO: Add diode class. Also, I have in plans transistor class.
+TODO: Add diode class. Also, I have in plans transistor class. Remove current inertia depending of number of components.
