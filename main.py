@@ -4,46 +4,41 @@
 #system in object-oriented regime
 
 from circuit import Circuit
-from simple_example import example
+# from examples import example01
 import matplotlib.pyplot as plt
 from math import sin
 
+
 dt = 0.001
-N = 10000
+N = 20000
 V0 = 100.
 
-System = Circuit()
+System = Circuit(dt)
 # a = System.AddAlternatingSource(lambda t: V0*sin(t))
 a = System.AddSource(V0)
 b = System.AddNode()
 c = System.AddNode()
 d = System.AddGround()
 
-ab = System.AddWire(a, b)
-bc1 = System.AddWire(b, c)
-bc2 = System.AddWire(b, c)
-cd = System.AddWire(c, d)
+ab = System.AddResistor(a, b, 1)
+bc0 = System.AddResistor(b, c, 1)
+bc1 = System.AddResistor(b, c, 1)
+cd = System.AddResistor(c, d, 1)
 
-Tab0 = []
-Tab1 = []
-Tab2 = []
-Tab3 = []
+Tab0, Tab1, Tab2, Tab3 = [], [], [], []
 
 for i in range(N):
-    System.TimeStep(dt)
-    Tab0.append(ab.I)
-    Tab1.append(bc1.I)
-    Tab2.append(bc2.I)
-    Tab3.append(cd.I)
+    System.TimeStep()
+    Tab0.append(ab.GetCurrent())
+    Tab1.append(bc0.GetCurrent())
+    Tab2.append(bc1.GetCurrent())
+    Tab3.append(cd.GetCurrent())
+
 
 Time = [i*dt for i in range(N)]
 
-plt.plot(Time, Tab0, label="ab")
-plt.plot(Time, Tab1, label="bc1")
-plt.plot(Time, Tab2, label="bc2")
-plt.plot(Time, Tab3, label="cd")
-
-plt.legend(loc='upper right', shadow=True)
+plt.plot(Time, Tab0)
+plt.plot(Time, Tab1)
+plt.plot(Time, Tab2)
+plt.plot(Time, Tab3)
 plt.show()
-
-# example(dt, N)
