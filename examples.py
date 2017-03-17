@@ -1,6 +1,37 @@
 from circuit import Circuit
 import matplotlib.pyplot as plt
 
+def FoxPropagationTest2(N = 200):
+    V0 = 100
+    R0 = 100.
+    dt = 0.001
+    Tab0, Tab1, Tab2, Tab3 = [], [], [], []
+    Time = [i*dt for i in range(N)]
+
+    def GetTab(n, m = 0):
+        R = R0/n
+        System = Circuit(dt)
+        a = System.AddSource(V0)
+        for i in range(n-1):
+            b = System.AddNode()
+            ab = System.AddResistor(a, b, R)
+            a = b
+        b = System.AddGround()
+        ab = System.AddResistor(a, b, R)
+        Tab = []
+        for i in range(N):
+            System.TimeStep(m)
+            Tab.append(ab.GetCurrent())
+        return Tab
+
+    plt.plot(Time, GetTab(1), label="1 resistor")
+    plt.plot(Time, GetTab(5), label="5 resistors")
+    plt.plot(Time, GetTab(20), label="20 resistors")
+    plt.plot(Time, GetTab(20, 100), label="20 resistors with num")
+
+    plt.legend(loc='upper right', shadow=True)
+    plt.show()
+
 def FoxPropagationTest(n = 200):
     '''Propagation test proposed by friend.
     Current model generates some inertia depending on wires number.''' 

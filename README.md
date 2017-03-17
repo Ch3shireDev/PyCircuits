@@ -8,6 +8,8 @@ My small simulation of electric circuits in Python. Believe me or not, it took m
 
 17.03: Removed current inertia, found bug introducing inertia depending on number of elements.
 
+18.03: Removed bug, restructured inheritance system of Nodes.
+
 Calculating method:
 
 Circuit is described by graph - nodes have associated potentials and lines (wires) have their own functions describing potential change depending on current, time etc. At each step each nodes potential is calculated as an arithmetic mean value from neigbouring points potentials minus potential change on associated wire.

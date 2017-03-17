@@ -16,9 +16,9 @@ class Circuit:
 
     def AddNode(self):
         '''Adds single node without set potential.'''
-        Node_ = Node()
-        self.AddNodeToList(Node_)
-        return Node_
+        Node = CustomNode()
+        self.AddNodeToList(Node)
+        return Node
 
     def AddSource(self, V):
         '''Adds constant potential node.'''
@@ -62,8 +62,14 @@ class Circuit:
         NodeOut.AddWire(Wire)
         return Wire
 
-    def TimeStep(self):
+    def TimeStep(self, n=100):
         '''Main TimeStep function to be called by the user.'''
+        for i in range(n):
+            x = 0
+            for Node in self.Nodes:
+                x += Node.TimeStep(self, 0)
+            if x < 1e-6:
+                break
         for Wire in self.Wires:
             Wire.SetChecked(False)
         for Node in self.Nodes:
