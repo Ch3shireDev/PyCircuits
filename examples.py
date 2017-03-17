@@ -6,7 +6,10 @@ def FoxPropagationTest(n = 200):
     Current model generates some inertia depending on wires number.''' 
     dt = 0.001
     V0 = 100.
-    N = 2000
+    N = 100
+
+
+    Tab0, Tab1 = [], []
 
     System1 = Circuit(dt)
     a = System1.AddSource(V0)
@@ -16,6 +19,13 @@ def FoxPropagationTest(n = 200):
 
     ab0 = System1.AddResistor(a, b, R)
 
+    for i in range(N):
+        System1.TimeStep()
+        Tab0.append(ab0.GetCurrent())
+
+    Time0 = [i*dt for i in range(N)]
+
+    plt.plot(Time0, Tab0)
 
     System2 = Circuit(dt)
     a = System2.AddSource(V0)
@@ -24,67 +34,61 @@ def FoxPropagationTest(n = 200):
 
     for i in range(n-2):
         c = System2.AddNode()
-        System2.AddResistor(b, c, R/n)
+        bc = System2.AddResistor(b, c, R/n)
         b = c
 
     d = System2.AddGround()
-    bd = System2.AddResistor(b,d,R/n)
-
-    Tab0, Tab1 = [], []
+    bd = System2.AddResistor(b, d, R/n)
 
     for i in range(N):
-        System1.TimeStep()
-        Tab0.append(ab0.GetCurrent())
-
         System2.TimeStep()
         Tab1.append(bd.GetCurrent())
 
+    Time1 = [i*dt for i in range(N)]
 
+
+
+    plt.plot(Time1, Tab1)
+    plt.show()
+
+def example01():
+
+    dt = 0.001
+    N = 10000
+    V0 = 100.
+    
+    System = Circuit()
+    a = System.AddSource(V0)
+    b = System.AddNode()
+    c = System.AddNode()
+    d = System.AddGround()
+
+    ab = System.AddResistor(a, b, 1)
+    bc0 = System.AddResistor(b, c, 1)
+    bc1 = System.AddResistor(b, c, 1)
+    cd = System.AddResistor(c, d, 1)
+
+    Tab0 = []
+    Tab1 = []
+    Tab2 = []
+    Tab3 = []
+
+    for i in range(N):
+        System.TimeStep()
+        Tab0.append(ab.I)
+        Tab1.append(bc0.I)
+        Tab2.append(bc1.I)
+        Tab3.append(cd.I)
 
     Time = [i*dt for i in range(N)]
 
-    plt.plot(Time, Tab0)
-    plt.plot(Time, Tab1)
+    plt.plot(Time, Tab0, label="ab")
+    plt.plot(Time, Tab1, label="bc0")
+    plt.plot(Time, Tab2, label="bc1")
+    plt.plot(Time, Tab3, label="cd")
+
+    plt.legend(loc='upper right', shadow=True)
     plt.show()
-
-    def example01():
-
-        dt = 0.001
-        N = 10000
-        V0 = 100.
-        
-        System = Circuit()
-        a = System.AddSource(V0)
-        b = System.AddNode()
-        c = System.AddNode()
-        d = System.AddGround()
-
-        ab = System.AddResistor(a, b, 1)
-        bc0 = System.AddResistor(b, c, 1)
-        bc1 = System.AddResistor(b, c, 1)
-        cd = System.AddResistor(c, d, 1)
-
-        Tab0 = []
-        Tab1 = []
-        Tab2 = []
-        Tab3 = []
-
-        for i in range(N):
-            System.TimeStep()
-            Tab0.append(ab.I)
-            Tab1.append(bc0.I)
-            Tab2.append(bc1.I)
-            Tab3.append(cd.I)
-
-        Time = [i*dt for i in range(N)]
-
-        plt.plot(Time, Tab0, label="ab")
-        plt.plot(Time, Tab1, label="bc0")
-        plt.plot(Time, Tab2, label="bc1")
-        plt.plot(Time, Tab3, label="cd")
-
-        plt.legend(loc='upper right', shadow=True)
-        plt.show()
 
 
 ### from simple_example.py:

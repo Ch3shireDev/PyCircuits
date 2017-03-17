@@ -6,14 +6,14 @@ class Line(object):
         self.NodeIn = NodeIn
         self.NodeOut = NodeOut
         self.I = 0.
+        self.R = 0.
         self.IsChecked = False
 
     def TimeStep(self, dt=0.001):
-        '''Generic TimeStep function, does not require change'''
+        '''Generic TimeStep function, requires change.'''
         if self.IsChecked is True:
             return
         self.SetChecked()
-        self.I += (self.VIn() - self.VOut() - self.DeltaV())*dt
 
     def VOut(self):
         '''Auxiliary function to obtain VOut value'''
@@ -69,6 +69,13 @@ class Resistor(Line):
 
     def DeltaV(self):
         return self.R*self.I
+
+    def TimeStep(self, dt=0.001):
+        '''Generic TimeStep function, does not require change'''
+        if self.IsChecked is True:
+            return
+        self.SetChecked()
+        self.I = (self.VIn() - self.VOut())/self.R
 
 class Diode(Line):
     '''Diode class, following the ideal diode law:
